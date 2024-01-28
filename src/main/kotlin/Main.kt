@@ -76,6 +76,47 @@ Añadir un nuevo método esMenorQue(t:Tiempo):Boolean,
 
 package org.example
 
+/** Pide al usuario que introduzca las horas, minutos y segundos y devuelve un objeto con esas características
+ *
+ * @return Hora creada por el usuario
+ */
+fun createTimeObject(): Time {
+    val newTime: Time
+
+    print("Introduce las horas -> ")
+    val hours = readln()
+    if (hours.trim().isEmpty()) throw IllegalArgumentException("No puedes crear objeto tiempo sin horas")
+
+    print("Introduce los minutos -> ")
+    val minutes = readln()
+
+    print("Introduce los segundos -> ")
+    val seconds = readln()
+
+    newTime = if (seconds.trim().isEmpty() && minutes.trim().isEmpty()) {
+        Time(hours.toInt())
+    } else if (seconds.trim().isEmpty()) {
+        Time(hours.toInt(), minutes.toInt())
+    } else if (minutes.trim().isEmpty()) {
+        throw IllegalArgumentException("No se puede crear un objeto tiempo con con segundos pero sin minutos")
+    } else {
+        Time(hours.toInt(), minutes.toInt(), seconds.toInt())
+    }
+
+    return newTime
+}
+
+
 fun main() {
-    println("Hello World!")
+    var tiempo1: Time
+
+    try {
+        tiempo1 = createTimeObject()
+    } catch (e: IllegalArgumentException) {
+        println("**ERROR** - $e")
+        tiempo1 = Time(0, 0, 0)
+    }
+
+    println(tiempo1.toString())
+
 }
