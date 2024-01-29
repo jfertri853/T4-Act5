@@ -118,5 +118,7 @@ fun main() {
     }
 
     println(tiempo1.toString())
+    tiempo1.increaseTime()
+    println(tiempo1.toString())
 
 }

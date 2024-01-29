@@ -1,27 +1,29 @@
 package org.example
 
 class Time(hours: Int, minutes: Int, seconds: Int) {
-    private var hours: Int = hours
-        set(value) {
-            verifyHours(value)
-            field = value
-        }
-
-    private var minutes: Int = minutes
-        set(value) {
-            verifyMinutes(value)
-            field = value
-        }
-
-    private var seconds: Int = seconds
+    private var seconds: Int = 0
         set(value) {
             verifySeconds(value)
             field = value
         }
 
+    private var minutes: Int = 0
+        set(value) {
+            verifyMinutes(value)
+            field = value
+        }
+
+    private var hours: Int = 0
+        set(value) {
+            verifyHours(value)
+            field = value
+        }
+
     init {
-        modifyTime(hours, minutes, seconds)
-        verifyHours(hours)
+        updateTime(seconds, minutes, hours)
+        verifySeconds(this.seconds)
+        verifyMinutes(this.minutes)
+        verifyHours(this.hours)
     }
 
     companion object {
@@ -82,7 +84,7 @@ class Time(hours: Int, minutes: Int, seconds: Int) {
      * @param minutes
      * @param seconds
      */
-    private fun modifyTime(hours: Int, minutes: Int, seconds: Int) {
+    private fun updateTime(seconds: Int, minutes: Int, hours: Int) {
         var newSeconds = seconds
         var newMinutes = minutes
         var newHours = hours
@@ -100,10 +102,35 @@ class Time(hours: Int, minutes: Int, seconds: Int) {
 //        while (newHours > MAX_HOUR) {
 //            newHours %= MAX_HOUR
 //        }
+        // Este trozo era para que se reiniciase a 0 las horas mientras estas superasen el máximo
 
-        this.seconds = newSeconds
-        this.minutes = newMinutes
-//        this.hours = newHours
+        this.seconds += newSeconds
+        this.minutes += newMinutes
+        this.hours += newHours
+    }
+
+
+    /** Pide horas, minutos y segundos al usuario e incrementa el tiempo del objeto esa cantidad introducida
+     */
+    fun increaseTime() {
+        try {
+            print("Introduce la cantidad de horas que quieres añadir: ")
+            val addedHours = readln().toInt()
+
+            print("Introduce la cantidad de minutos que quieres añadir: ")
+            val addedMinutes = readln().toInt()
+
+            print("Introduce la cantidad de segundos que quieres añadir: ")
+            val addedSeconds = readln().toInt()
+
+            if (addedHours < 0 || addedMinutes < 0 || addedSeconds < 0) {
+                throw NumberFormatException("No puedes añadir tiempo negativo (podrías si supiese programar)")
+            } else {
+                updateTime(addedSeconds, addedMinutes, addedHours)
+            }
+        } catch (e: NumberFormatException) {
+            println("**ERROR** - $e")
+        }
     }
 
 
