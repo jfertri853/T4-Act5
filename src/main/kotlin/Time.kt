@@ -21,9 +21,6 @@ class Time(hours: Int, minutes: Int, seconds: Int) {
 
     init {
         updateTime(seconds, minutes, hours)
-        verifySeconds(this.seconds)
-        verifyMinutes(this.minutes)
-        verifyHours(this.hours)
     }
 
     companion object {
@@ -85,9 +82,9 @@ class Time(hours: Int, minutes: Int, seconds: Int) {
      * @param seconds
      */
     private fun updateTime(seconds: Int, minutes: Int, hours: Int) {
-        var newSeconds = seconds
-        var newMinutes = minutes
-        var newHours = hours
+        var newSeconds = seconds + this.seconds
+        var newMinutes = minutes + this.minutes
+        var newHours = hours + this.hours
 
         if (newSeconds > MAX_SECOND) {
             newMinutes += newSeconds / 60
@@ -104,24 +101,30 @@ class Time(hours: Int, minutes: Int, seconds: Int) {
 //        }
         // Este trozo era para que se reiniciase a 0 las horas mientras estas superasen el máximo
 
-        this.seconds += newSeconds
-        this.minutes += newMinutes
-        this.hours += newHours
+        verifyHours(newHours)
+        this.seconds += newSeconds - this.seconds
+        this.minutes += newMinutes - this.minutes
+        this.hours += newHours - this.hours
     }
 
 
     /** Pide horas, minutos y segundos al usuario e incrementa el tiempo del objeto esa cantidad introducida
      */
-    fun increaseTime() {
+    fun increaseTime(): Boolean {
+        var addedNumber: String
+
         try {
             print("Introduce la cantidad de horas que quieres añadir: ")
-            val addedHours = readln().toInt()
+            addedNumber = readln()
+            val addedHours = if (addedNumber.trim().isEmpty()) 0 else addedNumber.toInt()
 
             print("Introduce la cantidad de minutos que quieres añadir: ")
-            val addedMinutes = readln().toInt()
+            addedNumber = readln()
+            val addedMinutes = if (addedNumber.trim().isEmpty()) 0 else addedNumber.toInt()
 
             print("Introduce la cantidad de segundos que quieres añadir: ")
-            val addedSeconds = readln().toInt()
+            addedNumber = readln()
+            val addedSeconds = if (addedNumber.trim().isEmpty()) 0 else addedNumber.toInt()
 
             if (addedHours < 0 || addedMinutes < 0 || addedSeconds < 0) {
                 throw NumberFormatException("No puedes añadir tiempo negativo (podrías si supiese programar)")
@@ -130,8 +133,13 @@ class Time(hours: Int, minutes: Int, seconds: Int) {
             }
         } catch (e: NumberFormatException) {
             println("**ERROR** - $e")
+            return false
+        } catch (e: IllegalArgumentException) {
+            println("**ERROR** - $e")
+            return false
         }
-    }
+        return true
+    } //TODO mejorar método increaseTime()
 
 
     override fun toString(): String {

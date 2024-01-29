@@ -118,7 +118,12 @@ fun main() {
     }
 
     println(tiempo1.toString())
-    tiempo1.increaseTime()
+
+    if (tiempo1.increaseTime()) {
+        println("Se incrementó el tiempo")
+    } else {
+        println("No se ha podido incrementar el tiempo")
+    }
     println(tiempo1.toString())
 
 }
